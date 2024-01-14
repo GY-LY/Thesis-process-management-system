@@ -1,14 +1,19 @@
-import { createApp } from 'vue'
+import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
-import ElementPlus from 'element-plus';
-import 'element-plus/dist/index.css';
 
+import VueRouter from "vue-router"
+import router from './router/index'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI)
+Vue.config.productionTip = false
 
-const app = createApp(App)
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+new Vue({
 
-app.use(router)
-app.use(ElementPlus)
-
-
-app.mount('#app')
+  render: h => h(App),
+  router
+}).$mount('#app')
